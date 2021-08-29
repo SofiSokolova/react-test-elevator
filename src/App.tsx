@@ -59,7 +59,7 @@ class Elevator extends React.Component<{}, State> {
           moveDirection = MoveDirection.UP;
         }
 
-        delay += 3000
+        delay += 2000
       }
 
       return {
@@ -111,7 +111,7 @@ class Elevator extends React.Component<{}, State> {
 
   render(): JSX.Element {
     const floors = this.floorNumbers.map((number) =>
-      <button key={number.toString()}
+      <button className={this.state.currentFloor === number ? 'current-floor' : '' } key={number.toString() }
               onClick={() => this.handleClick(number)}
               disabled={this.state.upQueue.has(number) || this.state.downQueue.has(number)}>
         {number}
@@ -120,10 +120,17 @@ class Elevator extends React.Component<{}, State> {
 
     return (
       <div className='main'>
-        <div>{this.state.currentFloor} {this.state.moveDirection}</div>
-        <div className='floor-btn'>
-          {floors}
-        </div>
+          <div className='wrapper'>
+            <div className='floor-display'>{this.state.currentFloor}
+              <p>{this.state.moveDirection === MoveDirection.UP && <i className="arrow-up" />}
+              {this.state.moveDirection === MoveDirection.DOWN && <i className="arrow-down"/>}
+                {this.state.moveDirection === MoveDirection.STANDING && '—'}</p> 
+            </div>
+            
+            <div className='floor-btn'>
+              {floors}
+            </div>
+          </div>
       </div>
 
     );
