@@ -30,13 +30,18 @@ class Elevator extends React.Component<{}, State> {
 
   }
 
+  componentDidUpdate(prevProps: Readonly<{}>, prevState: Readonly<State>) {
+    if (prevState.moveDirection === MoveDirection.STANDING && this.state.moveDirection !== MoveDirection.STANDING) {
+      this.moveElevator();
+    }
+  }
+
   private moveElevator(): void {
     let delay = 1000;
-    
-    this.setState((state) => {
 
-      let { moveDirection, upQueue, downQueue, currentFloor } = state;
-      
+    this.setState((state) => {
+      let {moveDirection, upQueue, downQueue, currentFloor} = state;
+
       if (upQueue.has(currentFloor) || downQueue.has(currentFloor)) {
         upQueue = new Set(upQueue);
         downQueue = new Set(downQueue);
@@ -56,7 +61,7 @@ class Elevator extends React.Component<{}, State> {
 
         delay += 3000
       }
-      
+
       return {
         upQueue,
         downQueue,
@@ -66,8 +71,7 @@ class Elevator extends React.Component<{}, State> {
       if (this.state.moveDirection !== MoveDirection.STANDING) {
         setTimeout(() => {
           this.setState((state) => {
-            let floor = state.currentFloor;
-            floor += state.moveDirection === MoveDirection.UP ? 1 : -1;
+            const floor = state.currentFloor + (state.moveDirection === MoveDirection.UP ? 1 : -1);
 
             return {
               currentFloor: floor,
@@ -78,7 +82,7 @@ class Elevator extends React.Component<{}, State> {
       }
     });
   }
-  
+
   handleClick(floor: number): void {
     this.setState((state) => {
       let {moveDirection, upQueue, downQueue} = state;
@@ -102,10 +106,7 @@ class Elevator extends React.Component<{}, State> {
         downQueue,
         moveDirection
       }
-
     });
-
-    this.moveElevator();
   }
 
   render(): JSX.Element {
@@ -127,7 +128,6 @@ class Elevator extends React.Component<{}, State> {
 
     );
   }
-
 }
 
 export default Elevator;
